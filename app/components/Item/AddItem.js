@@ -74,7 +74,7 @@ export default function AddItem() {
       setPrice ();
 
     } else {
-      alert("Please enter a new title and description.");
+      alert("Please enter all new info.");
     }
   };
 
