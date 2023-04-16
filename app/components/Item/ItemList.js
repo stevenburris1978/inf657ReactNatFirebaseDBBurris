@@ -6,14 +6,19 @@ import Items from "./Items";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AddItem from "./AddItem";
 
-export default function ItemList() {
+export default function ItemList(id) {
   const [itemList, setItemList] = useState(ItemData);
 
   const deleteItem = (id) => {
     setItemList(itemList.filter((item) => item.id !== id));
+
+    console.log(ItemList);
+
+
+
   };
   return (
-  
+
 
    <SafeAreaView style={styles.screen}>
 
@@ -23,9 +28,14 @@ export default function ItemList() {
         keyExtractor={(itemList) => itemList.id}
         renderItem={({ item }) => (
           <Items
+            id={item.id}
+            category={item.category}
             title={item.title}
             description={item.description}
             image={item.image}
+            price={item.price}
+            date={item.date}
+            
             renderRightActions={() => (
               <View style={styles.deleteContainer}>
                 <TouchableWithoutFeedback onPress={() => deleteItem(item.id)}>
@@ -43,14 +53,15 @@ export default function ItemList() {
       />
 
     </SafeAreaView>
-
+  
   );
+
 }
 
 const styles = StyleSheet.create({
   screen: {
     paddingTop: Constants.StatusBarHeight,
-    flex: 1,
+    backgroundColor: "aquamarine",
   },
   container: {
     padding: 20,
@@ -73,9 +84,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   deleteContainer: {
-    backgroundColor: "red",
+    backgroundColor: "#88F726",
     width: 150,
     justifyContent: "center",
     alignItems: "center",
+    marginTop: 20,
   },
 });

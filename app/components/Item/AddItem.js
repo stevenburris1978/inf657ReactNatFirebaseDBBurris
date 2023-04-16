@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {
   SafeAreaView,
+  Button,
   StyleSheet,
   Text,
   View,
@@ -9,28 +10,69 @@ import {
 } from "react-native";
 import { Divider } from "react-native-elements";
 import ItemData from "./ItemData";
+import DropDownPicker from "react-native-dropdown-picker";
+import DateTimePicker from "react-native-modal-datetime-picker";
+import { categories } from "./ItemData";
+
 
 export default function AddItem() {
 
-  const [itemList, setItemList] = useState([ItemData]);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
 
-  function handelSubmit(title, description, index) {
-    if (title && description !== "") {
+  const [title, setTitle] = useState(ItemData);
+  const [description, setDescription] = useState(ItemData);
+  const [id, setId] = useState(ItemData);
+  const [price, setPrice] = useState(ItemData);
+  
+    //useSate for DropDown
+    const [open, setOpen] = useState(false);
+    const [category, setCategory] = useState(null);
+  
+    const categoryItems = categories.map((item) => ({
+      value: item.value,
+      label: item.label,
+    }));
+  
+    //DateTimePicker
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(null);
+  
+    const showDatePicker = () => {
+      setDatePickerVisibility(true);
+    };
+  
+    const hideDatePicker = () => {
+      setDatePickerVisibility(false);
+    };
+  
+    const handleConfirm = (date) => {
+      setSelectedDate(date);
+      console.log("A date has been picked: ", date);
+      hideDatePicker();
+    };
 
-      setItemList(itemList.map(itms => {
-        return [
-          ...itms,
-          {
-            id: ++itms.length,
+  const handelSubmit = () => {
+    if (title && description && category && selectedDate && price) {
+         
+          const newItem = {
+            id: ItemData.length + 1,
             title: title, 
-            description: description
-          }
-        ]
-      }))
+            description: description,
+            category: category,
+            price: price,
+            date: selectedDate.toString(),
+          };
+        
+          ItemData.push(newItem);
+      console.log (ItemData);
+
+
       setTitle("");
       setDescription("");
+      setId ();
+      setCategory(null);
+      setSelectedDate(null);
+      setPrice ();
+
     } else {
       alert("Please enter a new title and description.");
     }
@@ -39,7 +81,9 @@ export default function AddItem() {
 
   return (
     <>
+      
       <SafeAreaView style={styles.screen}>
+      
       <View style={styles.containerTwo}>
                 <Image
                 style={styles.image}
@@ -48,6 +92,7 @@ export default function AddItem() {
                <Text style={{ marginTop: 20, fontSize: 35, paddingLeft:5, color: "midnightblue"}}>Shopping App</Text>
 
                </View>
+
         <View style={styles.viewContainer}>
           <Text style={styles.title}>Add Items</Text>
           <TextInput
@@ -62,19 +107,53 @@ export default function AddItem() {
             onChangeText={description => setDescription(description)}
             description={description}
           />
+          <TextInput
+            style={styles.input}
+            placeholder="Enter Item Price"
+            onChangeText={price => setPrice(price)}
+            description={price}
+          />
+
+          <DropDownPicker
+            open={open}
+            value={category}
+            items={categoryItems}
+            setOpen={setOpen}
+            setValue={setCategory}
+            placeholder="Item Category"
+            placeholderStyle={styles.dropdownText}
+            containerStyle={styles.dropdown}
+            dropDownContainerStyle={styles.dropdownContainer}
+          />
+
+          <View style={styles.date}>
+            <Button title="Item Date Picker" onPress={showDatePicker} />
+            <DateTimePicker
+              isVisible={isDatePickerVisible}
+              mode="datetime"
+              onConfirm={handleConfirm}
+              onCancel={hideDatePicker}
+            />
+          </View>
 
           <TouchableOpacity 
           style={styles.button} 
-          onPress={() => handelSubmit(title, description)}>
+          onPress={() => handelSubmit(title, description, id, price)}>
             <Text style={styles.buttonText}>Add Item</Text>
           </TouchableOpacity>
+
+          
+
         </View>
-        <Divider orientation="vertical" />
+
+
       </SafeAreaView>
     </>
-  );
-}
+    
+  );        
 
+}
+  <Divider orientation="vertical" />
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
@@ -105,22 +184,22 @@ containerTwo: {
 
 },
   button: {
-    backgroundColor: "yellow",
+    backgroundColor: "aqua",
     borderRadius: 15,
     paddingVertical: 10,
     paddingHorizontal: 20,
     marginTop: 250,
-    width: "25%"
+    width: "100%"
   },
   buttonText: {
-    color: "white",
+    color: "teal",
     fontSize: 20,
     textAlign: "center",
   },
   viewContainer: {
     flex: 1,
     padding: 45,
-    backgroundColor: "#ffe4b5",
+    backgroundColor: "#F8F993",
     width: "90%"
   },
   title: {
@@ -129,11 +208,26 @@ containerTwo: {
     textAlign: "center",
   },
   input: {
-    height: 58,
+    height: 75,
     margin: 10,
     borderWidth: 2,
     padding: 25,
     borderColor: "green",
     borderBottomColor: "black",
+  },
+  dropdownText: {
+    color: "black",
+    fontWeight: "bold",
+  },
+  dropdown: { height: 100, borderRadius: 30, paddingTop: 30 },
+  dropdownContainer: {
+    backgroundColor: "#dfdfdf",
+    borderRadius: 30,
+  },
+  date: {
+    paddingTop: 30,
+  },
+  dateText: {
+    fontSize: 10,
   },
 });
