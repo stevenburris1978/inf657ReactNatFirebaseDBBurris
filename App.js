@@ -1,17 +1,20 @@
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { StyleSheet, SafeAreaView } from 'react-native';
 import { AuthContextProvider } from './app/context/AuthContext';
-import Navigation from './app/navigation/Navigation';
-
-const Stack = createNativeStackNavigator();
+import { TaskProvider } from "./app/context/TaskContext";
+import { NavigationContainer } from "@react-navigation/native";
+import MyTabs from './app/navigation/BottomNavigatiom';
 
 export default function App() {
+
 
   return (
     <SafeAreaView style={styles.appjsContainer}>
       <AuthContextProvider>
-      <Navigation/>
+        <TaskProvider>
+          <NavigationContainer>
+            <MyTabs />
+          </NavigationContainer>
+        </TaskProvider>
       </AuthContextProvider>
     </SafeAreaView>
   );

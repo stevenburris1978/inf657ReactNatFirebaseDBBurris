@@ -25,14 +25,14 @@ export default function Items({
           <View style={styles.mainContainerTwo}>
           <View style={styles.mainContainer}>
             <Image style={styles.image} source={image} />
-            <Text style={styles.description}>Id: {id}</Text>
+            <Text style={styles.description}>Id:  {id}</Text>
             <Text style={styles.description}>Category: {category}</Text>            
             <Text style={styles.description}>Item: {title}</Text>
             <Text style={styles.description}>Description: {description}</Text>
             <Text style={styles.description}>Price: ${price}</Text>
             <Text style={styles.description}>Date: {date}</Text>
             <View style={styles.swipeContainer}>
-            <MaterialCommunityIcons name="gesture-swipe-left" size={23} color="midnightblue" />
+            <MaterialCommunityIcons name="gesture-swipe-left" size={40} color="midnightblue" />
             </View>
           </View>
           </View>

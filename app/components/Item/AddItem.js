@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
   SafeAreaView,
   Button,
@@ -9,20 +9,45 @@ import {
   TouchableOpacity, Image
 } from "react-native";
 import { Divider } from "react-native-elements";
-import ItemData from "./ItemData";
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import { categories } from "./ItemData";
-
+import TaskContext from "../../context/TaskContext";
 
 export default function AddItem() {
+  const {addItem} = useContext(TaskContext);
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
 
+  // add item card
+  const handelSubmit = () => {
 
-  const [title, setTitle] = useState(ItemData);
-  const [description, setDescription] = useState(ItemData);
-  const [id, setId] = useState(ItemData);
-  const [price, setPrice] = useState(ItemData);
-  
+    if (title && description && price && category && selectedDate) {
+
+      const item = {
+        
+        title,
+        description,
+        price,
+        category,
+        date: selectedDate.toString(),
+      };
+      addItem(item);
+      console.log(item);
+
+      setTitle("");
+      setDescription("");
+      setCategory(null);
+      setSelectedDate(null);
+      setPrice ("");
+     
+
+    } else {
+      alert("Please enter all new info.");
+    }
+  };
+
     //useSate for DropDown
     const [open, setOpen] = useState(false);
     const [category, setCategory] = useState(null);
@@ -49,36 +74,6 @@ export default function AddItem() {
       console.log("A date has been picked: ", date);
       hideDatePicker();
     };
-
-  const handelSubmit = () => {
-    if (title && description && category && selectedDate && price) {
-         
-          const newItem = {
-            id: ItemData.length + 1,
-            title: title, 
-            description: description,
-            category: category,
-            price: price,
-            date: selectedDate.toString(),
-          };
-        
-          ItemData.push(newItem);
-      console.log (ItemData);
-
-
-      setTitle("");
-      setDescription("");
-      setId ();
-      setCategory(null);
-      setSelectedDate(null);
-      setPrice ();
-
-    } else {
-      alert("Please enter all new info.");
-    }
-  };
-
-
   return (
     <>
       
@@ -95,23 +90,24 @@ export default function AddItem() {
 
         <View style={styles.viewContainer}>
           <Text style={styles.title}>Add Items</Text>
+          
           <TextInput
             style={styles.input}
             placeholder="Enter Item title"
-            onChangeText={title => setTitle(title)}
-            title={title}
+            onChangeText={(title) => setTitle(title)}
+            value={title}
           />
           <TextInput
             style={styles.input}
             placeholder="Enter Item Description"
-            onChangeText={description => setDescription(description)}
-            description={description}
+            onChangeText={(description) => setDescription(description)}
+            value={description}
           />
           <TextInput
             style={styles.input}
-            placeholder="Enter Item Price"
-            onChangeText={price => setPrice(price)}
-            description={price}
+            placeholder="Please use only numbers and decimals"
+            onChangeText={(price) => setPrice(price)}
+            value={price}
           />
 
           <DropDownPicker
@@ -138,14 +134,11 @@ export default function AddItem() {
 
           <TouchableOpacity 
           style={styles.button} 
-          onPress={() => handelSubmit(title, description, id, price)}>
-            <Text style={styles.buttonText}>Add Item</Text>
+          onPress={handelSubmit}>
+          <Text style={styles.buttonText}>Add Item</Text>
           </TouchableOpacity>
 
-          
-
         </View>
-
 
       </SafeAreaView>
     </>
@@ -179,7 +172,7 @@ containerTwo: {
   padding: 40,
   alignItems: "stretch",
   justifyContent: "flex-start",
-  width: "90%"
+  width: "100%"
 
 
 },
@@ -197,10 +190,10 @@ containerTwo: {
     textAlign: "center",
   },
   viewContainer: {
-    flex: 1,
+    flex: 4,
     padding: 45,
     backgroundColor: "#F8F993",
-    width: "90%"
+    width: "100%"
   },
   title: {
     color: "black",
